@@ -16,3 +16,18 @@ class SupperDifferBaseTestCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        
+#taken from https://github.com/valermor/nose2-tests-recipes
+UNIT_TESTS_GROUP = 'UNIT_TESTS_GROUP'
+INTEGRATON_TESTS_GROUP = 'INTEGRATON_TESTS_GROUP'
+
+def groups(*group_list):
+    """Decorator that adds group name to test method for use with the attributes (-A) plugin.
+    """
+    def wrap_ob(ob):
+        if len(group_list) == 1:
+            setattr(ob, "group", group_list[0])
+        elif len(group_list) > 1:
+            setattr(ob, "groups", group_list)
+        return ob
+    return wrap_ob

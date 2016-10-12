@@ -2,6 +2,8 @@ from SuperDiffer.tests import *
 from SuperDiffer.id import controllers as ID
 
 class DBCountTestCase(SupperDifferBaseTestCase):
+    
+    @groups(UNIT_TESTS_GROUP)
     def test_db_count_1(self):        
         #Given
         self.assertEqual(0, ID.db_count())
@@ -14,6 +16,7 @@ class DBCountTestCase(SupperDifferBaseTestCase):
         #Then
         self.assertEqual(1, ID.db_count())
 
+    @groups(UNIT_TESTS_GROUP)
     def test_db_count_2(self):        
         #Given
         self.assertEqual(0, ID.db_count())

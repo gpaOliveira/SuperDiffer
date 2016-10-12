@@ -12,9 +12,3 @@ source venv/bin/activate
 # pip install things
 venv/bin/pip install -r requirements.txt
 venv/bin/python setup.py install
-
-#create the database
-#python createdb.py
-
-#start server
-#python runserver.py
