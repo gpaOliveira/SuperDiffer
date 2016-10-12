@@ -1,0 +1,10 @@
+*~
+.vagrant
+.bash_history
+*.pip
+*.cache
+*.pyc
+venv/
+build/
+dist/
+*egg-info/
