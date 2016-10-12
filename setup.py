@@ -26,8 +26,7 @@ setup(
     name = project_name,
     packages = find_packages(),
     platforms = ["any"],
-    scripts = [],
-    test_suite = "",
+    test_suite = "nose2.collector.collector",
     url = "https://github.com/" + __author_username__ + "/" + project_name,
     version = __version__,
     classifiers = [

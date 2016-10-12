@@ -1,11 +1,11 @@
 from SuperDiffer import app, db
-from SuperDiffer.id import models as ID_models
+from SuperDiffer.id import controllers as ID
+
 from flask import Flask, render_template
 
 @app.route('/db_count')
 def db_count():
-    data = ID_models.ID.query.all()
-    return render_template("db.count.html", count=len(data))
+    return render_template("db.count.html", count=ID.db_count())
     
 @app.route('/')
 def index():
