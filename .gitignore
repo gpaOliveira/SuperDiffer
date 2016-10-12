@@ -1,6 +1,7 @@
 *~
 .vagrant
 .bash_history
+*.db
 *.pip
 *.cache
 *.pyc

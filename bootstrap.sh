@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-apt-get update --yes
-
 # install python
+apt-get update --yes
 apt-get install python-setuptools python-dev python-pip build-essential --yes
 
 # install virtualenv (use --always-copy due to protocol error)
@@ -13,3 +12,9 @@ source venv/bin/activate
 # pip install things
 venv/bin/pip install -r requirements.txt
 venv/bin/python setup.py install
+
+#create the database
+#python createdb.py
+
+#start server
+#python runserver.py
