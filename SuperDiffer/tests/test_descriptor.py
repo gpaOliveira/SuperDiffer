@@ -3,7 +3,7 @@ from SuperDiffer.tests.test_base_descriptor import *
 from SuperDiffer.id import controllers as ID
 import json
 
-class AddDescriptortTestCase(SupperDifferBaseDescriptortTestCase):
+class AddDescriptorTestCase(SupperDifferBaseDescriptorTestCase):
 
     @groups(UNIT_TESTS_GROUP)
     def test_left_add_ok(self):
@@ -70,3 +70,6 @@ class AddDescriptortTestCase(SupperDifferBaseDescriptortTestCase):
         self._integration_descriptor_add_201("right", json.dumps({ "data" : "a"}))
         self._integration_descriptor_add_400("left", json.dumps({ "data" : "b"}))
         self._integration_descriptor_add_400("right", json.dumps({ "data" : "b"}))
+        
+    def test_integration_id_nan_404(self):
+        self._integration_id_as_nan_404()

@@ -1,11 +1,11 @@
-from SuperDiffer.id import models
+from SuperDiffer.id.models import ID
 from SuperDiffer import db
 
-def db_count():
-    return len(models.ID.query.all())
+def count():
+    return len(ID.query.all())
     
-def db_list():
-    data = models.ID.query.all()
+def list():
+    data = ID.query.all()
     to_return = []
     for d in data:
         entry = {}
@@ -15,9 +15,9 @@ def db_list():
         to_return.append(entry)
     return to_return
     
-def add_data(id, descriptor, data):
+def add(id, descriptor, data):
     try:
-        u = models.ID(id = id, description = descriptor, data = data)
+        u = ID(id = id, description = descriptor, data = data)
         db.session.add(u)
         db.session.commit()
     except Exception as e:
