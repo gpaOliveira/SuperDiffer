@@ -24,3 +24,22 @@ def add(id, descriptor, data):
         db.session.rollback()
         return False
     return True
+
+def _grab_descriptors_values_to_diff(id_to_diff, descriptors_to_diff):
+    """"Grab all the descriptors values to diff or get out"""
+    to_diff = {}
+    for d in descriptors_to_diff:
+        value = ID.query.filter_by(id = id_to_diff, description = d).first()
+        if value:
+            to_diff[d] = value
+        else:
+            return None
+    return to_diff
+    
+def diff(id_to_diff, descriptors_to_diff):
+    to_diff = _grab_descriptors_values_to_diff(id_to_diff, descriptors_to_diff)
+    diff = {}
+    if not to_diff:
+        return None        
+    
+    return diff

@@ -5,6 +5,16 @@ import pdb
 
 from flask import Flask, render_template, request, abort
 
+#References: https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
+
+@app.route('/v1/diff/<int:id>', methods=['GET'])
+def diff_right_left(id):
+    diff = ID.diff(id, ["left","right"])
+    if not diff:
+        abort(400)
+        
+    return json.dumps(diff)
+
 @app.route('/v1/diff/<int:id>/left', methods=['POST'])
 def add_left_to_id(id):
     return _add_data_to_id_description(id, "left", request.json)
@@ -18,8 +28,8 @@ def _add_data_to_id_description(id, descriptor, request_json):
     try:
         data = json.dumps(request_json)#remove unicode data received
     except ValueError:
-        abort(400)        
-    if not ID.add_data(id, descriptor, data):
+        abort(400)
+    if not ID.add(id, descriptor, data):
         abort(400)
     return "Created", 201
    
