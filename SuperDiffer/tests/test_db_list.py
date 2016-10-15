@@ -10,12 +10,12 @@ class DBListTestCase(SupperDifferBaseTestCase):
         self.assertEqual(0, ID.db_count())
         
         #When
-        u = ID_models.ID(id="1", left="a", right = "b")
+        u = ID_models.ID(id="1", description="a", data = "b")
         db.session.add(u)
         db.session.commit()
         
         #Then
-        self.assertEqual([{"id" : 1, "left" : "a", "right" : "b"}], ID.db_list())
+        self.assertEqual([{"id" : 1, "description" : "a", "data" : "b"}], ID.db_list())
 
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_db_list_1(self):
@@ -23,10 +23,10 @@ class DBListTestCase(SupperDifferBaseTestCase):
         self.assertEqual(0, ID.db_count())
         
         #When
-        u = ID_models.ID(id="1", left="a", right = "b")
+        u = ID_models.ID(id="1", description="a", data = "b")
         db.session.add(u)
         db.session.commit()
         
         #Then
         result = self.app.get('/db_json_list') 
-        self.assertEqual([{"id" : 1, "left" : "a", "right" : "b"}], json.loads(result.data))
+        self.assertEqual([{"id" : 1, "description" : "a", "data" : "b"}], json.loads(result.data))

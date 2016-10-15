@@ -9,7 +9,7 @@ def db_list():
     for d in data:
         entry = {}
         entry["id"] = d.id
-        entry["left"] = d.left.encode('ascii','ignore')
-        entry["right"] = d.right.encode('ascii','ignore')
+        entry["description"] = d.description.encode('ascii','ignore')
+        entry["data"] = d.data.encode('ascii','ignore')
         to_return.append(entry)
     return to_return
