@@ -7,11 +7,10 @@ import json,base64,pdb
 
 @app.route('/v1/diff/<int:id>', methods=['GET'])
 def diff_right_left(id):
-    diff = ID.diff(id, ["left","right"])
-    if not diff:
-        abort(400)
-        
-    return jsonify(diff)
+    all_diff_data = ID.diff(id, ["left","right"])
+    if not all_diff_data or not all_diff_data["left_right"]:
+        abort(400)        
+    return jsonify(all_diff_data["left_right"])
 
 @app.route('/v1/diff/<int:id>/left', methods=['POST'])
 def add_left_to_id(id):
