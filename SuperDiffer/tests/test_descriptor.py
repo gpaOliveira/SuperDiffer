@@ -40,36 +40,37 @@ class AddDescriptorTestCase(SupperDifferBaseDescriptorTestCase):
         self._descriptor_add_not_ok("center")
         self._descriptor_add_not_ok("left")
         self._descriptor_add_not_ok("right")
-        
+    
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_left_201(self):
-        self._integration_descriptor_add_201("left", json.dumps({ "data" : "a"}))
+        self._integration_descriptor_add_201("left")
     
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_right_201(self):
-        self._integration_descriptor_add_201("right", json.dumps({ "data" : "a"}))
+        self._integration_descriptor_add_201("right")
         
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_left_400_due_to_repeated_left_value(self):
-        self._integration_descriptor_add_201("left", json.dumps({ "data" : "a"}))
-        self._integration_descriptor_add_400("left", json.dumps({ "data" : "b"}))
+        self._integration_descriptor_add_201("left", {"data":"abcd"})
+        self._integration_descriptor_add_400("left", {"data":"abcf"})
                          
     @groups(INTEGRATON_TESTS_GROUP)
-    def test_integration_left_400_due_to_bad_json(self):
-        self._integration_descriptor_add_201("left", json.dumps({ "data" : "a"}))
-        self._integration_descriptor_add_400("left", "[\"a\":1]")
+    def test_integration_left_400_due_to_bad_base64(self):
+        self._integration_descriptor_add_400("left", {"data":"abc"})
+        self._integration_descriptor_add_400("left", {"data":[]})
+        self._integration_descriptor_add_400("left", {"nodata":"abcd"})
         
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_center_404_no_endpoint(self):
-        self._integration_descriptor_add_404("center", json.dumps({ "data" : "a"}))
-        self._integration_descriptor_add_404("center", "[\"a\":1]")
+        self._integration_descriptor_add_404("center", {"data":"abcd"})
         
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_mixed(self):
-        self._integration_descriptor_add_201("left", json.dumps({ "data" : "a"}))
-        self._integration_descriptor_add_201("right", json.dumps({ "data" : "a"}))
-        self._integration_descriptor_add_400("left", json.dumps({ "data" : "b"}))
-        self._integration_descriptor_add_400("right", json.dumps({ "data" : "b"}))
-        
+        self._integration_descriptor_add_201("left", {"data":"abcd"})
+        self._integration_descriptor_add_201("right", {"data":"abcd"})
+        self._integration_descriptor_add_400("left", {"data":"abcf"})
+        self._integration_descriptor_add_400("right", {"data":"abcf"})
+    
+    @groups(INTEGRATON_TESTS_GROUP)    
     def test_integration_id_nan_404(self):
         self._integration_id_as_nan_404()

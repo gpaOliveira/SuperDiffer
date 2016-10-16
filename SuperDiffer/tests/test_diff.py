@@ -41,7 +41,7 @@ class DiffTestCases(SupperDifferBaseTestCase):
     @groups(INTEGRATON_TESTS_GROUP)
     def test_diff_integration_bad_descriptors(self):
         #Given Left description of ID = 1 is added
-        self.assertEqual(True, ID.add(1, "left", "abc"))
+        self.assertEqual(True, ID.add(1, "left", "abcd"))
         self.assertEqual(1, ID.count())
         initial_id_list = ID.list()
         

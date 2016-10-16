@@ -1,15 +1,16 @@
 from SuperDiffer.tests import *
 from SuperDiffer.id import controllers as ID
 import json
+import pdb
 
 class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
 
-    def _descriptor_add_ok(self, descriptor):
+    def _descriptor_add_ok(self, descriptor, value = "abcd"):
         #Given initial db count is recorded
         initial_db_count = ID.count()
         
         #When a model entry is added
-        model_entry_status = ID.add(1, descriptor, "abc")
+        model_entry_status = ID.add(1, descriptor, value)
         
         #Then the model entry status is ok
         self.assertEqual(True, model_entry_status)
@@ -18,9 +19,9 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         self.assertEqual(initial_db_count + 1, ID.count())
         
         #And the data from db list model has the entry as used in the end
-        self.assertEqual({"id" : 1, "description" : descriptor, "data" : "abc"}, ID.list()[-1])        
+        self.assertEqual({"id" : 1, "description" : descriptor, "data" : value}, ID.list()[-1])        
         
-    def _descriptor_add_not_ok(self, descriptor):
+    def _descriptor_add_not_ok(self, descriptor, value = "abcd"):
         #Given initial db count is recorded
         initial_db_count = ID.count()
         
@@ -28,7 +29,7 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         initial_db_list_data = ID.list()
         
         #When a model entry is added
-        model_entry_status = ID.add(1, descriptor, "abc")
+        model_entry_status = ID.add(1, descriptor, value)
         
         #Then the model entry status is not ok
         self.assertEqual(False, model_entry_status)
@@ -39,13 +40,13 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         #And the initial db count is the same as the beggining
         self.assertEqual(initial_db_count, ID.count())
 
-    def _integration_descriptor_add_201(self, descriptor, data_to_send):
+    def _integration_descriptor_add_201(self, descriptor, data_to_send = {"data":"abcd"}):
         #Given initial db count is recorded
         initial_db_count = ID.count()
         
         #When a request is made to add a certain description
         result = self.app.post("/v1/diff/1/" + descriptor,
-                               data = data_to_send,
+                               data = json.dumps(data_to_send),
                                content_type = "application/json")
         
         #Then a 201 response is retrieved
@@ -54,7 +55,7 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         self.assertEqual(initial_db_count + 1, ID.count())
         
         #And the data from db list model has the entry used on the end
-        self.assertEqual({"id" : 1, "description" : descriptor, "data" : data_to_send}, ID.list()[-1])
+        self.assertEqual({"id" : 1, "description" : descriptor, "data" : data_to_send["data"]}, ID.list()[-1])
                          
     def _integration_descriptor_add_400(self, descriptor, data_to_send):
         #Given initial db count is recorded
@@ -65,7 +66,7 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         
         #When a request is made to add a certain description
         result = self.app.post("/v1/diff/1/" + descriptor,
-                               data = data_to_send,
+                               data = json.dumps(data_to_send),
                                content_type = "application/json")
         
         #Then a 400 Bad Request is retrieved
