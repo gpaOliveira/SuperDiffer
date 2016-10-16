@@ -2,11 +2,11 @@ import os
 from setuptools import setup,find_packages
 
 project_name  =  "SuperDiffer"
-__version__  =  "0.0.1"
+__version__  =  "1.0.0"
 __author__  =  "Gabriel Oliveira"
 __author_email__  =  "gabriel.pa.oliveira@gmail.com"
 __author_username__  =  "gpaOliveira"
-__description__  =  "REST Service and Web App to calculate the difference between two input strings"
+__description__  =  "REST Service to calculate the difference between two input strings"
 
 #adapted from https://pythonhosted.org/an_example_pypi_project/setuptools.html
 def read(fname):

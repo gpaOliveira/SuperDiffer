@@ -1,6 +1,8 @@
 from SuperDiffer import db
 
 class ID(db.Model):
+    """Model class to hold the ID table (Primary Key), along with its descriptors (Primary Keys also, so we don't want to have non-unique descriptors to a ID) and value"""
+
     __tablename__ = "ID"
     id = db.Column(db.Integer, primary_key = True)
     description = db.Column(db.String(60), primary_key = True)

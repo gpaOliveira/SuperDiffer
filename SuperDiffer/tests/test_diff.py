@@ -4,6 +4,7 @@ from sqlalchemy import exc
 import json
 
 class DiffTestCases(SupperDifferBaseTestCase):
+    """Test cases to verify and document the Diff behavior on the controller and on the endpoint"""
 
     @groups(UNIT_TESTS_GROUP)
     def test_diff_without_any_descriptors(self):

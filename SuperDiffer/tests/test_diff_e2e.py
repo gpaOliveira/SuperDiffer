@@ -6,6 +6,7 @@ import base64
 import os
 
 class DiffE2ETestCases(SupperDifferBaseTestCase):
+    """Test cases to verify if the endpoints can be used together safelly to load images as base64 values"""
 
     def _load_image_on_json(self, image_name):
         json_to_send = {"data":""}
