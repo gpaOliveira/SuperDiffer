@@ -1,0 +1,13 @@
+machine:
+  python:
+    version: 2.7.6
+
+test:
+  override:
+    - ./run_all_tests.sh
+    
+  post:
+    - mkdir $CIRCLE_ARTIFACTS/htmlcov
+    - mv htmlcov/* $CIRCLE_ARTIFACTS/htmlcov
+    - mv nose2-junit.xml $CIRCLE_ARTIFACTS
+    

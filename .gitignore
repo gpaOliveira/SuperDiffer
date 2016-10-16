@@ -8,4 +8,7 @@
 venv/
 build/
 dist/
+htmlcov/
+.coverage
 *egg-info/
+*junit.xml

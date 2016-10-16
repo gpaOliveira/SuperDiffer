@@ -1,3 +1,5 @@
+![Build Status](https://circleci.com/gh/gpaOliveira/SuperDiffer.svg?style=shield&circle-token=:circle-token)
+
 # Super Differ
 
 > Requirements:
