@@ -20,6 +20,7 @@ class SupperDifferBaseTestCase(unittest.TestCase):
 #taken from https://github.com/valermor/nose2-tests-recipes
 UNIT_TESTS_GROUP = 'UNIT_TESTS_GROUP'
 INTEGRATON_TESTS_GROUP = 'INTEGRATON_TESTS_GROUP'
+END_TO_END_TESTS_GROUP = 'END_TO_END_TESTS_GROUP'
 
 def groups(*group_list):
     """Decorator that adds group name to test method for use with the attributes (-A) plugin.
