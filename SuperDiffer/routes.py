@@ -9,10 +9,11 @@ import json,base64,pdb
 
 @app.route('/v1/diff/<int:id>', methods=['GET'])
 def diff_right_left(id):
-    """Calculates the diff between left and right descriptors of a given ID"""
+    """Calculates the diff between left and right descriptors of a given ID and remove those descriptors if they're found (even if the data lenght is not the same and no diff is made)"""
     all_diff_data = ID.diff(id, ["left","right"])
     if not all_diff_data or not all_diff_data["left_right"]:
-        abort(400)        
+        abort(400)
+    ID.remove_all(id, ["left","right"])
     return jsonify(all_diff_data["left_right"])
 
 @app.route('/v1/diff/<int:id>/left', methods=['POST'])

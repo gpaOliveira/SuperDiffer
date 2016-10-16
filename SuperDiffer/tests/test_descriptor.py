@@ -12,6 +12,17 @@ class AddDescriptorTestCase(SupperDifferBaseDescriptorTestCase):
         self._descriptor_add_ok("left")
         
     @groups(UNIT_TESTS_GROUP)
+    def test_left_remove_ok(self):
+        """Add left descriptor and make sure it can be removed just fine"""
+        self._descriptor_add_ok("left")
+        self._descriptor_remove_ok("left")
+    
+    @groups(UNIT_TESTS_GROUP)
+    def test_left_remove_no_left(self):
+        """Do not add left descriptor and make sure the removal is not fine"""
+        self._descriptor_remove_not_ok("left")
+        
+    @groups(UNIT_TESTS_GROUP)
     def test_right_add_ok(self):
         """Add right descriptor and make sure all went fine"""
         self._descriptor_add_ok("right")
@@ -22,11 +33,46 @@ class AddDescriptorTestCase(SupperDifferBaseDescriptorTestCase):
         self._descriptor_add_ok("center")
         
     @groups(UNIT_TESTS_GROUP)
+    def test_left_remove_wont_affect_others(self):
+        """Add left descriptor and make sure it can be removed just fine, without affecting any other records"""
+        self._descriptor_add_ok("right")
+        self.assertEqual([{"id" : 1, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+        self._descriptor_add_ok("left")
+        self.assertEqual([{"id" : 1, "description" : "right", "data" : "abcd"}, 
+                          {"id" : 1, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+        self._descriptor_remove_ok("left")
+        self.assertEqual([{"id" : 1, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+    
+    @groups(UNIT_TESTS_GROUP)
+    def test_left_removal_wont_affect_other_ids(self):
+        """Add left descriptor to ID 1 and ID 2 and make sure ID 2 can be removed without affecting any other records"""
+        self.assertEqual(True, ID.add(1, "left", "abcd"))
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(True, ID.add(2, "left", "abcd"))
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(True, ID.remove(2, "left"))
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+    
+    @groups(UNIT_TESTS_GROUP)
     def test_left_add_not_ok(self):
         """Add left descriptor twice and make sure the second one doesn't work"""
         self._descriptor_add_ok("left")
         self._descriptor_add_not_ok("left")
-        
+    
+    @groups(UNIT_TESTS_GROUP)
+    def test_left_add_after_removal(self):
+        """Add left descriptor, delete it and make sure it can be added again just fine"""
+        self._descriptor_add_ok("left")
+        self._descriptor_remove_ok("left")
+        self._descriptor_add_ok("left")
+    
     @groups(UNIT_TESTS_GROUP)
     def test_right_add_not_ok(self):
         """Add right descriptor twice and make sure the second one doesn't work"""
@@ -48,6 +94,64 @@ class AddDescriptorTestCase(SupperDifferBaseDescriptorTestCase):
         self._descriptor_add_not_ok("center")
         self._descriptor_add_not_ok("left")
         self._descriptor_add_not_ok("right")
+    
+    @groups(UNIT_TESTS_GROUP)
+    def test_removal_all(self):
+        """Add left and right descriptor to ID 1 and make sure it can be removed"""
+        self.assertEqual(True, ID.add(1, "left", "abcd"))
+        self.assertEqual(True, ID.add(1, "right", "abcd"))
+        self.assertEqual(True, ID.remove_all(1, ["left","right"]))
+        
+    @groups(UNIT_TESTS_GROUP)
+    def test_removal_all_without_single_descriptor(self):
+        """Add left descriptor only to ID 1 and make sure remove all fails but didn't affected anything on the database"""
+        self.assertEqual(True, ID.add(1, "left", "abcd"))
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(False, ID.remove_all(1, ["left","right"]))
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abcd"}], 
+                          ID.list())
+                          
+    @groups(UNIT_TESTS_GROUP)
+    def test_removal_all_without_all_descriptor(self):
+        """Try to remove all from an ID that doesn't have anything and ensure it fails but leaves the database intact"""
+        self.assertEqual(True, ID.add(2, "left", "abcd"))
+        self.assertEqual(True, ID.add(2, "right", "abcd"))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(False, ID.remove_all(1, ["left","right"]))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+    
+    @groups(UNIT_TESTS_GROUP)
+    def test_removal_all_without_any_descriptor(self):
+        """Try to remove all without any descriptor on the parameters list and ensure it ends ok but leaves the database intact"""
+        self.assertEqual(True, ID.add(2, "left", "abcd"))
+        self.assertEqual(True, ID.add(2, "right", "abcd"))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(True, ID.remove_all(2, []))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+                          
+    @groups(UNIT_TESTS_GROUP)
+    def test_removal_all_allow_adding_more(self):
+        """Remove all from an ID and make sure we can add them again"""
+        self.assertEqual(True, ID.add(2, "left", "abcd"))
+        self.assertEqual(True, ID.add(2, "right", "abcd"))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
+        self.assertEqual(True, ID.remove_all(2, ["left", "right"]))
+        self.assertEqual(True, ID.add(2, "left", "abcd"))
+        self.assertEqual(True, ID.add(2, "right", "abcd"))
+        self.assertEqual([{"id" : 2, "description" : "left", "data" : "abcd"},
+                          {"id" : 2, "description" : "right", "data" : "abcd"}], 
+                          ID.list())
     
     @groups(INTEGRATON_TESTS_GROUP)
     def test_integration_left_201(self):

@@ -31,6 +31,36 @@ def add(id, descriptor, data):
         return False
     return True
 
+def remove(id, descriptor):
+    """Remove a descriptor from an ID on our model - rollback and return False if anything goes wrong (register not found, for example)"""
+    try:
+        u = ID.query.filter_by(id = id, description = descriptor).first()
+        if not u:
+            return False
+        db.session.delete(u)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return False
+    return True
+    
+def remove_all(id, descriptors_to_remove):
+    """Remove a list of descriptors from a single ID on our model - rollback and return False if anything goes wrong (any register not found, for example)"""
+    try:
+        models_to_remove = []
+        for d in descriptors_to_remove:
+            u = ID.query.filter_by(id = id, description = d).first()
+            if not u:
+                return False
+            models_to_remove.append(u)
+        for u in models_to_remove:
+            db.session.delete(u)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return False
+    return True
+
 def grab_descriptors_values_to_diff(id_to_diff, descriptors_to_diff):
     """Grab all the descriptors values to diff or get out"""
     to_diff = {}

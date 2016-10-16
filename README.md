@@ -17,13 +17,19 @@ Details can be found on [bootstrap.sh](https://github.com/gpaOliveira/SuperDiffe
 
 The server is started with [run_server.sh](https://github.com/gpaOliveira/SuperDiffer/blob/master/run_server.sh), but don't forget to enter dev mode first using [start_dev_mode.sh](https://github.com/gpaOliveira/SuperDiffer/blob/master/start_dev_mode.sh).
 
+# API Behavior
+
+The normal basic flow is to add your data to an ID left descriptor, add your data to the right ID descriptor and asks for the diff of it. Your data will be removed after each succesfull (that returns a 200) diff, even if the diff is not possible to be made. After you've added to left, succesfull adds will fail with a 400 status. The same constraint holds with right. We have no feature to cleanup the database except after a succesfull diff, so take good care of your values. A good approach to delete an unwanted value on left (or right) is to add the same value you've used on one descriptor to another and asks for a diff - that will remove your unwanted data.
+
+We only do diffs on same size strings. If no diff is made, the returned JSON will say that "size" is "not equal". The mechanism we use to diff is described on the [Controllers Wiki](https://github.com/gpaOliveira/SuperDiffer/wiki/ID-Controller), on the find_diff_indexes_and_lenght_on_same_size_values method. 
+
 # Routes
 
 Routes to allow clients to add left and right base64 encoded on JSON values and fetch their diff are described below:
 
 > [**GET /v1/diff/<int:id>**] diff_right_left method
 
-Calculates the diff between left and right descriptors of a given ID
+Calculates the diff between left and right descriptors of a given ID and remove those descriptors if they're found (even if the data lenght is not the same and no diff is made)
 
 > [**POST /v1/diff/<int:id>/left**] add_left_to_id method
 

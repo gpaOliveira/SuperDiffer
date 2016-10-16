@@ -3,6 +3,7 @@
 
 Controller methods file, where the models are used and their information is server to routes or tests.
 
+
 > count method
 
 Helper testing function to count all IDs
@@ -16,6 +17,16 @@ Helper testing function to list all IDs
 > add method
 
 Add a description and a data to our model - rollback and return False if anything goes wrong (PK not respected, for example)
+
+
+> remove method
+
+Remove a descriptor from an ID on our model - rollback and return False if anything goes wrong (register not found, for example)
+
+
+> remove_all method
+
+Remove a list of descriptors from a single ID on our model - rollback and return False if anything goes wrong (any register not found, for example)
 
 
 > grab_descriptors_values_to_diff method
@@ -74,7 +85,7 @@ Routes to allow clients to add left and right base64 encoded on JSON values and 
 
 > [**GET /v1/diff/<int:id>**] diff_right_left method
 
-Calculates the diff between left and right descriptors of a given ID
+Calculates the diff between left and right descriptors of a given ID and remove those descriptors if they're found (even if the data lenght is not the same and no diff is made)
 
 
 > [**POST /v1/diff/<int:id>/left**] add_left_to_id method
@@ -156,6 +167,16 @@ Test cases to verify and document the Add behavior on the controller and on the 
 Add left descriptor and make sure all went fine
 
 
+> [**UNIT_TESTS**] left remove ok method
+
+Add left descriptor and make sure it can be removed just fine
+
+
+> [**UNIT_TESTS**] left remove no left method
+
+Do not add left descriptor and make sure the removal is not fine
+
+
 > [**UNIT_TESTS**] right add ok method
 
 Add right descriptor and make sure all went fine
@@ -166,9 +187,24 @@ Add right descriptor and make sure all went fine
 Add center descriptor and make sure all went fine
 
 
+> [**UNIT_TESTS**] left remove wont affect others method
+
+Add left descriptor and make sure it can be removed just fine, without affecting any other records
+
+
+> [**UNIT_TESTS**] left removal wont affect other ids method
+
+Add left descriptor to ID 1 and ID 2 and make sure ID 2 can be removed without affecting any other records
+
+
 > [**UNIT_TESTS**] left add not ok method
 
 Add left descriptor twice and make sure the second one doesn't work
+
+
+> [**UNIT_TESTS**] left add after removal method
+
+Add left descriptor, delete it and make sure it can be added again just fine
 
 
 > [**UNIT_TESTS**] right add not ok method
@@ -184,6 +220,31 @@ Add center descriptor twice and make sure the second one doesn't work
 > [**UNIT_TESTS**] mixed add method
 
 Mix add descriptors to make sure the twice add of each doesn't work
+
+
+> [**UNIT_TESTS**] removal all method
+
+Add left and right descriptor to ID 1 and make sure it can be removed
+
+
+> [**UNIT_TESTS**] removal all without single descriptor method
+
+Add left descriptor only to ID 1 and make sure remove all fails but didn't affected anything on the database
+
+
+> [**UNIT_TESTS**] removal all without all descriptor method
+
+Try to remove all from an ID that doesn't have anything and ensure it fails but leaves the database intact
+
+
+> [**UNIT_TESTS**] removal all without any descriptor method
+
+Try to remove all without any descriptor on the parameters list and ensure it ends ok but leaves the database intact
+
+
+> [**UNIT_TESTS**] removal all allow adding more method
+
+Remove all from an ID and make sure we can add them again
 
 
 > [**INTEGRATON_TESTS**] integration left 201 method
@@ -326,7 +387,7 @@ Test cases to verify and document the Diff behavior on the controller and on the
 * **When** a diff is made asking for left and right of ID = 1
 * **Then** a 200 is retrieved
 * **And** the response json states that the size is different
-* **And** nothing changed on the databse
+* **And** the databse is empty
 
 > [**INTEGRATON_TESTS**] diff integration left right equal lenghts values method
 
@@ -334,7 +395,7 @@ Test cases to verify and document the Diff behavior on the controller and on the
 * **When** a diff is made asking for left and right of ID = 1
 * **Then** a 200 is retrieved
 * **And** the response json states that the size is different
-* **And** nothing changed on the databse
+* **And** the databse is empty
 
 > [**INTEGRATON_TESTS**] diff integration left right 1 diff on values method
 
@@ -342,15 +403,16 @@ Test cases to verify and document the Diff behavior on the controller and on the
 * **When** a diff is made asking for left and right of ID = 1
 * **Then** a 200 is retrieved
 * **And** the response json states that the size is different
-* **And** nothing changed on the databse
+* **And** that the databse is empty
 
 > [**INTEGRATON_TESTS**] diff integration left right 1 diff on other values method
 
 * **Given** left and right descriptors of ID = 1 are added, with different values
+* **And** they're all added to the databae
 * **When** a diff is made asking for left and right of ID = 2
 * **Then** a 200 is retrieved
 * **And** the response json states that the size is different
-* **And** nothing changed on the databse
+* **And** ID 2 data was removed from the database
 
 # DiffE2ETestCases
 

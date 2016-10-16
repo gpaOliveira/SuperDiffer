@@ -19,8 +19,21 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         self.assertEqual(initial_db_count + 1, ID.count())
         
         #And the data from db list model has the entry as used in the end
-        self.assertEqual({"id" : 1, "description" : descriptor, "data" : value}, ID.list()[-1])        
+        self.assertEqual({"id" : 1, "description" : descriptor, "data" : value}, ID.list()[-1])
+
+    def _descriptor_remove_ok(self, descriptor, value = "abcd"):
+        #Given initial db count is recorded
+        initial_db_count = ID.count()
         
+        #When a model entry is removed
+        model_entry_status = ID.remove(1, descriptor)
+        
+        #Then the model entry status is ok
+        self.assertEqual(True, model_entry_status)
+        
+        #And the initial db count was decremented by 1
+        self.assertEqual(initial_db_count - 1, ID.count())
+    
     def _descriptor_add_not_ok(self, descriptor, value = "abcd"):
         #Given initial db count is recorded
         initial_db_count = ID.count()
@@ -36,6 +49,19 @@ class SupperDifferBaseDescriptorTestCase(SupperDifferBaseTestCase):
         
         #Then the data from db list model is the same as the beggining
         self.assertEqual(initial_db_list_data, ID.list())
+        
+        #And the initial db count is the same as the beggining
+        self.assertEqual(initial_db_count, ID.count())
+        
+    def _descriptor_remove_not_ok(self, descriptor, value = "abcd"):
+        #Given initial db count is recorded
+        initial_db_count = ID.count()
+        
+        #When a model entry is removed
+        model_entry_status = ID.remove(1, descriptor)
+        
+        #Then the model entry status is ok
+        self.assertEqual(False, model_entry_status)
         
         #And the initial db count is the same as the beggining
         self.assertEqual(initial_db_count, ID.count())

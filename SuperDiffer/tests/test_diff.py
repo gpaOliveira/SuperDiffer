@@ -246,8 +246,8 @@ class DiffTestCases(SupperDifferBaseTestCase):
         #And the response json states that the size is different
         self.assertEqual({"size":"not equal", "diffs":[]}, json.loads(result.data))
         
-        #And nothing changed on the databse
-        self.assertEqual(initial_id_list, ID.list())
+        #And the databse is empty
+        self.assertEqual([], ID.list())
     
     @groups(INTEGRATON_TESTS_GROUP)
     def test_diff_integration_left_right_equal_lenghts_values(self):
@@ -266,8 +266,8 @@ class DiffTestCases(SupperDifferBaseTestCase):
         #And the response json states that the size is different
         self.assertEqual({"size":"equal", "diffs":[]}, json.loads(result.data))
         
-        #And nothing changed on the databse
-        self.assertEqual(initial_id_list, ID.list())
+        #And the databse is empty
+        self.assertEqual([], ID.list())
         
     @groups(INTEGRATON_TESTS_GROUP)
     def test_diff_integration_left_right_1_diff_on_values(self):
@@ -275,7 +275,6 @@ class DiffTestCases(SupperDifferBaseTestCase):
         self.assertEqual(True, ID.add(1, "left", "abc1de"))
         self.assertEqual(True, ID.add(1, "right", "abc2de"))
         self.assertEqual(2, ID.count())
-        initial_id_list = ID.list()
         
         #When a diff is made asking for left and right of ID = 1
         result = self.app.get("/v1/diff/1")
@@ -286,8 +285,8 @@ class DiffTestCases(SupperDifferBaseTestCase):
         #And the response json states that the size is different
         self.assertEqual({"size":"equal", "diffs":[{"diff_start" : 3, "chain" : 1}]}, json.loads(result.data))
         
-        #And nothing changed on the databse
-        self.assertEqual(initial_id_list, ID.list())
+        #And that the databse is empty
+        self.assertEqual([], ID.list())
         
     @groups(INTEGRATON_TESTS_GROUP)
     def test_diff_integration_left_right_1_diff_on_other_values(self):
@@ -296,8 +295,13 @@ class DiffTestCases(SupperDifferBaseTestCase):
         self.assertEqual(True, ID.add(1, "right", "abc2de"))
         self.assertEqual(True, ID.add(2, "left", "abc1de124"))
         self.assertEqual(True, ID.add(2, "right", "abc1de123"))
-        self.assertEqual(4, ID.count())
-        initial_id_list = ID.list()
+        
+        #And they're all added to the databae
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abc1de"},
+                          {"id" : 1, "description" : "right", "data" : "abc2de"},
+                          {"id" : 2, "description" : "left", "data" : "abc1de124"},
+                          {"id" : 2, "description" : "right", "data" : "abc1de123"}], 
+                          ID.list())
         
         #When a diff is made asking for left and right of ID = 2
         result = self.app.get("/v1/diff/2")
@@ -308,5 +312,7 @@ class DiffTestCases(SupperDifferBaseTestCase):
         #And the response json states that the size is different
         self.assertEqual({"size":"equal", "diffs":[{"diff_start" : 8, "chain" : 1}]}, json.loads(result.data))
         
-        #And nothing changed on the databse
-        self.assertEqual(initial_id_list, ID.list())
+        #And ID 2 data was removed from the database
+        self.assertEqual([{"id" : 1, "description" : "left", "data" : "abc1de"},
+                          {"id" : 1, "description" : "right", "data" : "abc2de"}], 
+                          ID.list())
